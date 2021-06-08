@@ -16,3 +16,20 @@ per90_cols = [i + "_per90" for i in cols_for_per90]
 # creating per90 columns :-
 for k in range(0, len(per90_cols)):
     indian_forwards[per90_cols[k]] = indian_forwards[cols_for_per90[k]].divide(indian_forwards['minutes_played']).multiply(90)
+
+# print(indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum())
+
+fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum(), theta = per90_cols, line_close = True)
+fig.update_traces(fill = 'toself')
+fig.show()
+
+######    Normalisation of values    #####
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+indian_forwards[per90_cols] = scaler.fit_transform(indian_forwards[per90_cols])
+
+# same radar plot after normalisation of the data
+fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum(), theta = per90_cols, line_close = True)
+fig.update_traces(fill = 'toself')
+fig.show()
