@@ -21,7 +21,7 @@ for k in range(0, len(per90_cols)):
 
 fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum(), theta = per90_cols, line_close = True)
 fig.update_traces(fill = 'toself')
-fig.show()
+# fig.show()
 
 ######    Normalisation of values    #####
 
@@ -32,4 +32,18 @@ indian_forwards[per90_cols] = scaler.fit_transform(indian_forwards[per90_cols])
 # same radar plot after normalisation of the data
 fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum(), theta = per90_cols, line_close = True)
 fig.update_traces(fill = 'toself')
-fig.show()
+# fig.show()
+
+# print(indian_forwards[indian_forwards['name'].str.contains("Manvir")]) # find a particular player by name
+
+# printing all index values
+for i, row in indian_forwards.iterrows():
+    print("Index location --> ", i, "\n")
+    # print(row.values, "\n")
+
+# radar plots for all players
+for i, row in indian_forwards.iterrows():
+    print(row['name'])
+    fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == row['id']), per90_cols].sum(), theta = per90_cols, line_close = True)
+    fig.update_traces(fill = 'toself')
+    # fig.show()
