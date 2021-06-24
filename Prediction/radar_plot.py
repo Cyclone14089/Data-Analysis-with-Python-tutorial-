@@ -38,12 +38,63 @@ fig.update_traces(fill = 'toself')
 
 # printing all index values
 for i, row in indian_forwards.iterrows():
-    print("Index location --> ", i, "\n")
+    print(end="")
+    # print("Index location --> ", i, "\n")
     # print(row.values, "\n")
 
 # radar plots for all players
 for i, row in indian_forwards.iterrows():
-    print(row['name'])
+    #print(row['name'])
     fig = px.line_polar(indian_forwards, r = indian_forwards.loc[(indian_forwards['id'] == row['id']), per90_cols].sum(), theta = per90_cols, line_close = True)
     fig.update_traces(fill = 'toself')
     # fig.show()
+
+########    Multiple trace radar charts    ########
+
+# removing rows with duplicate ids
+indian_forwards_id_names = indian_forwards.drop_duplicates(subset = ['id'])[['id', 'name']]
+# print(indian_forwards_id_names)
+
+print(indian_forwards_id_names.shape) # printing (rows, columns) structure
+
+import plotly.graph_objects as gob
+
+isl_max = indian_forwards[per90_cols].max().max() # storing max of the max values in each column
+
+for i, row in indian_forwards_id_names.iterrows():
+    
+    if row['id'] == 19150: # if id = id of "Sunil Chettri"
+        continue
+
+    print(row['name'])
+
+    fig = gob.Figure()
+
+    fig.add_trace(gob.Scatterpolar( # adding trace in plot for Sunil Chettri
+
+        r = indian_forwards.loc[(indian_forwards['id'] == 19150), per90_cols].sum(),
+        theta = per90_cols,
+        fill = 'toself',
+        name = "Sunil Chettri"
+    )) 
+    fig.add_trace(gob.Scatterpolar( # adding trace in plot for the current player in loop
+
+        r = indian_forwards.loc[(indian_forwards['id'] == row['id']), per90_cols].sum(),
+        theta = per90_cols,
+        fill = 'toself',
+        name = row['name']
+    ))
+
+    fig.update_layout(
+
+        title = "Sunil Chettri vs " + row['name'],
+        polar = dict(
+            radialaxis = dict(
+                visible = True,
+                range = [0, isl_max]
+            )
+        ),
+        showlegend = True
+    )
+
+    fig.show()
